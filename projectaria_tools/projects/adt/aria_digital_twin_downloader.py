@@ -69,27 +69,24 @@ class AriaDigitalTwinDataType(Enum):
 def calculate_file_sha1(file_path: str) -> str:
     sha1 = hashlib.sha1()
     with open(file_path, "rb") as file:
-        chunk = file.read(4096)  # Read the file in 4KB chunks
-        while chunk:
+        while chunk := file.read(4096):
             sha1.update(chunk)
-            chunk = file.read(4096)
-
-    sha1_sum = sha1.hexdigest()
-    return sha1_sum
+    return sha1.hexdigest()
 
 
 class AriaDigitalTwinDownloadStatusManager:
     def __init__(self):
-        self.status = {}
-        self.status[str(AriaDigitalTwinDataType.MAIN_DATA)] = False
-        self.status[str(AriaDigitalTwinDataType.SEGMENTATIONS)] = False
-        self.status[str(AriaDigitalTwinDataType.DEPTH_IMAGES)] = False
-        self.status[str(AriaDigitalTwinDataType.SYNTHETIC)] = False
-        self.status[str(AriaDigitalTwinDataType.MPS_EYEGAZE)] = False
-        self.status[str(AriaDigitalTwinDataType.MPS_SLAM_TRAJECTORIES)] = False
-        self.status[str(AriaDigitalTwinDataType.MPS_SLAM_POINTS)] = False
-        self.status[str(AriaDigitalTwinDataType.MPS_SLAM_CALIBRATION)] = False
-        self.status[str(AriaDigitalTwinDataType.MPS_SLAM_SUMMARY)] = False
+        self.status = {
+            str(AriaDigitalTwinDataType.MAIN_DATA): False,
+            str(AriaDigitalTwinDataType.SEGMENTATIONS): False,
+            str(AriaDigitalTwinDataType.DEPTH_IMAGES): False,
+            str(AriaDigitalTwinDataType.SYNTHETIC): False,
+            str(AriaDigitalTwinDataType.MPS_EYEGAZE): False,
+            str(AriaDigitalTwinDataType.MPS_SLAM_TRAJECTORIES): False,
+            str(AriaDigitalTwinDataType.MPS_SLAM_POINTS): False,
+            str(AriaDigitalTwinDataType.MPS_SLAM_CALIBRATION): False,
+            str(AriaDigitalTwinDataType.MPS_SLAM_SUMMARY): False,
+        }
 
     def from_json(self, json_path: str):
         try:
@@ -262,14 +259,15 @@ class AriaDigitalTwinDatasetDownloader:
                     )
             return
 
-        responses = {}
         # download examples or sequences
         if self.sequences is not None and self.data_types:
-            for sequence in self.sequences:
-                responses[sequence] = self.__download_sequence(
+            responses = {
+                sequence: self.__download_sequence(
                     sequence=sequence,
                     output_folder=output_folder,
                 )
+                for sequence in self.sequences
+            }
             num_success_sequences = sum(
                 1 for sequence in responses if responses[sequence]
             )

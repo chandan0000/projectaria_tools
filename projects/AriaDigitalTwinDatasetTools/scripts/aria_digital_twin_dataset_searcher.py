@@ -26,33 +26,41 @@ class AriaDigitalTwinDatasetSearcher:
     def get_sequences_with_skeleton_number(self, skeleton_number: int = 1) -> List[str]:
         results = []
         for sequence in self.metadata.get("contents", []):
-            for tour_name, metadata in sequence.items():
-                if metadata.get("num_skeletons", 0) == skeleton_number:
-                    results.append(tour_name)
+            results.extend(
+                tour_name
+                for tour_name, metadata in sequence.items()
+                if metadata.get("num_skeletons", 0) == skeleton_number
+            )
         return results
 
     def get_sequences_with_multi_persons(self) -> List[str]:
         results = []
         for sequence in self.metadata.get("contents", []):
-            for tour_name, metadata in sequence.items():
-                if metadata.get("is_multi_person", False):
-                    results.append(tour_name)
+            results.extend(
+                tour_name
+                for tour_name, metadata in sequence.items()
+                if metadata.get("is_multi_person", False)
+            )
         return results
 
     def get_sequences_with_single_person(self) -> List[str]:
         results = []
         for sequence in self.metadata.get("contents", []):
-            for tour_name, metadata in sequence.items():
-                if metadata.get("is_multi_person", False):
-                    results.append(tour_name)
+            results.extend(
+                tour_name
+                for tour_name, metadata in sequence.items()
+                if metadata.get("is_multi_person", False)
+            )
         return results
 
     def get_sequences_of_scene(self, scene: str) -> List[str]:
         results = []
         for sequence in self.metadata.get("contents", []):
-            for tour_name, metadata in sequence.items():
-                if scene in metadata.get("scenes", []):
-                    results.append(tour_name)
+            results.extend(
+                tour_name
+                for tour_name, metadata in sequence.items()
+                if scene in metadata.get("scenes", [])
+            )
         return results
 
 

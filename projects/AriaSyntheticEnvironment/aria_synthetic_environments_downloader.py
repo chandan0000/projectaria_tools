@@ -103,14 +103,11 @@ def main(
         print(f"Creating local output folder {output_dir}")
         os.makedirs(output_dir)
 
-    chunk_ids_to_download = list(set([x // SCENES_PER_CHUNK for x in scene_ids]))
-    chunk_ids_to_download.sort()
+    chunk_ids_to_download = sorted({x // SCENES_PER_CHUNK for x in scene_ids})
     for i, chunk_id in enumerate(chunk_ids_to_download):
-        chunk_filename = "{}_chunk_{}.zip".format(set_type, f"{chunk_id:07}")
+        chunk_filename = f"{set_type}_chunk_{chunk_id:07}.zip"
         print(
-            "Downloading chunk {}/{}: {}".format(
-                i + 1, len(chunk_ids_to_download), chunk_filename
-            )
+            f"Downloading chunk {i + 1}/{len(chunk_ids_to_download)}: {chunk_filename}"
         )
         chunk_details = next(
             (item for item in metadata if item["filename"] == chunk_filename), None

@@ -153,8 +153,9 @@ def main():
     #
     if trajectory_data:
         device_trajectory = [
-            it.transform_world_device.translation()[0] for it in trajectory_data
-        ][0::10]
+            it.transform_world_device.translation()[0]
+            for it in trajectory_data
+        ][::10]
         rr.log(
             "world/device_trajectory",
             rr.LineStrips3D(device_trajectory),
@@ -222,8 +223,7 @@ def main():
 
         # Camera pose
         if trajectory_data:
-            pose_info = get_nearest_pose(trajectory_data, device_time_ns)
-            if pose_info:
+            if pose_info := get_nearest_pose(trajectory_data, device_time_ns):
                 T_world_device = pose_info.transform_world_device
                 T_device_camera = rgb_camera_calibration.get_transform_device_camera()
                 rr.log(
@@ -249,9 +249,8 @@ def main():
         # Eye Gaze (vector and image reprojection)
         #
         if eyegaze_data:
-            depth_m = 1.0  # Select a fixed depth of 1m
-            eye_gaze = get_nearest_eye_gaze(eyegaze_data, device_time_ns)
-            if eye_gaze:
+            if eye_gaze := get_nearest_eye_gaze(eyegaze_data, device_time_ns):
+                depth_m = 1.0  # Select a fixed depth of 1m
                 gaze_vector_in_cpf = mps.get_eyegaze_point_at_depth(
                     eye_gaze.yaw, eye_gaze.pitch, depth_m
                 )

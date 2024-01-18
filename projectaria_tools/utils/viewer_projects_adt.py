@@ -68,7 +68,7 @@ def main():
         data_paths = paths_provider.get_datapaths_by_device_num(args.device_number)
         gt_provider = AriaDigitalTwinDataProvider(data_paths)
     except Exception as e:
-        print("Error: ", str(e))
+        print("Error: ", e)
         exit(-1)
 
     # We are limiting display to the time span where the Aria glasses are moving
@@ -78,7 +78,7 @@ def main():
     img_timestamps_ns = gt_provider.get_aria_device_capture_timestamps_ns(rgb_stream_id)
     img_timestamps_ns = [
         img_timestamp_ns
-        for i, img_timestamp_ns in enumerate(img_timestamps_ns)
+        for img_timestamp_ns in img_timestamps_ns
         if (
             img_timestamp_ns >= aria_pose_start_timestamp
             and img_timestamp_ns <= aria_pose_end_timestamp
@@ -253,7 +253,7 @@ def main():
                 # Implement a logic to LOG only effective object motion
                 #  - by using a cache of the last know pose
                 #  - and measuring if the motion amplitude is larger than a threshold
-                if instance_info.name in dynamic_obj_pose_cache.keys():
+                if instance_info.name in dynamic_obj_pose_cache:
                     current_pose = bbox_3d.transform_scene_object
                     old_pose = dynamic_obj_pose_cache[instance_info.name]
                     current_pose_R = current_pose.rotation().to_matrix()
@@ -282,15 +282,12 @@ def main():
                     for i in range(0, len(aabb_coords)):
                         aabb_pt = aabb_coords[i]
                         aabb_pt_homo = np.append(aabb_pt, [1])
-                        obb_pt = (
-                            bbox_3d.transform_scene_object.to_matrix() @ aabb_pt_homo
-                        )[0:3]
+                        obb_pt = (bbox_3d.transform_scene_object.to_matrix() @ aabb_pt_homo)[:3]
                         obb[i] = obb_pt
                     rr.log(
                         f"world/objects/dynamic/{instance_info.name}",
                         rr.LineStrips3D([obb]),
                     )
-            # Static
             elif instance_info.motion_type == STATIC and obj_id not in static_obj_ids:
                 static_obj_ids.add(obj_id)
                 bbox_3d = bboxes3d[obj_id]
@@ -300,9 +297,7 @@ def main():
                 for i in range(0, len(aabb_coords)):
                     aabb_pt = aabb_coords[i]
                     aabb_pt_homo = np.append(aabb_pt, [1])
-                    obb_pt = (
-                        bbox_3d.transform_scene_object.to_matrix() @ aabb_pt_homo
-                    )[0:3]
+                    obb_pt = (bbox_3d.transform_scene_object.to_matrix() @ aabb_pt_homo)[:3]
                     obb[i] = obb_pt
                 rr.log(
                     f"world/objects/static/{instance_info.name}",

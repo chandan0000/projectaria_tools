@@ -24,7 +24,7 @@ def read_language_file(filepath):
     assert os.path.exists(filepath), f"Could not find language file: {filepath}"
     with open(filepath, "r") as f:
         entities = []
-        for line in f.readlines():
+        for line in f:
             line = line.rstrip()
             entries = line.split(", ")
             command = entries[0]
@@ -48,8 +48,7 @@ def _transform_from_Rt(R, t):
 # Reads a Ground truth trajectory line
 def _read_trajectory_line(line):
     line = line.rstrip().split(",")
-    pose = {}
-    pose["timestamp"] = int(line[1])
+    pose = {"timestamp": int(line[1])}
     translation = np.array([float(p) for p in line[3:6]])
     quat_xyzw = np.array([float(o) for o in line[6:10]])
     rot_matrix = R.from_quat(quat_xyzw).as_matrix()
@@ -70,7 +69,7 @@ def read_trajectory_file(filepath):
         rotations = []
         transforms = []
         timestamps = []
-        for line in f.readlines():
+        for line in f:
             pose = _read_trajectory_line(line)
             positions.append(pose["position"])
             rotations.append(pose["rotation"])

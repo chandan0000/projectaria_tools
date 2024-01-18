@@ -133,9 +133,7 @@ class Vrs2MoviePyFrameConverter:
         )
         import math
 
-        # Keeping only integer seconds (no decimals)
-        duration_in_seconds = math.floor((t_last - t_first) / 1e9)
-        return duration_in_seconds
+        return math.floor((t_last - t_first) / 1e9)
 
     def dropped_frames_count(self) -> int:
         """

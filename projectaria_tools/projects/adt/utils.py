@@ -66,7 +66,7 @@ def project_3d_bbox_to_image(
     for i in range(0, num_points):
         p_aabb_homo = _np.append(aabb_coords[i], [1])
         p_in_cam_homo = _np.matmul(transform_cam_obj, p_aabb_homo)
-        bbox_3d_in_cam[i, :] = p_in_cam_homo[0:3]
+        bbox_3d_in_cam[i, :] = p_in_cam_homo[:3]
 
     # project into image, break if any points don't project
     projected_line_strips = []
@@ -210,9 +210,7 @@ def voc_ap(rec, prec):
     # where X axis (recall) changes value
     i = _np.where(mrec[1:] != mrec[:-1])[0]
 
-    # and sum (\Delta recall) * prec
-    ap = _np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
-    return ap
+    return _np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
 
 
 def get_timed_poses(archive, seq_name: str):

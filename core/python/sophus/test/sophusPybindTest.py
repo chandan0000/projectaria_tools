@@ -194,7 +194,7 @@ class SophusPybindTest(unittest.TestCase):
 
         # average
         inter_half = interpolate(se3vec[0], se3vec[1], 0.5)
-        average01 = iterativeMean(se3vec[0:2])
+        average01 = iterativeMean(se3vec[:2])
         self.assertIsNone(
             np.testing.assert_array_almost_equal(
                 average01.log()[0], inter_half.log()[0]
