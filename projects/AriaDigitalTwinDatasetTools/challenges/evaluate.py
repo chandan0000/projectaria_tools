@@ -150,8 +150,7 @@ def evaluate(
             recalls = tp / num_gt[proto]
             precisions = tp / np.maximum(tp + fp, np.finfo(np.float64).eps)
             average_precision[threshold][proto] = voc_ap(recalls, precisions)
-    output = {}
-    output["result"] = [{"test_split": {}}]
+    output = {"result": [{"test_split": {}}]}
     for threshold in THRESHOLDS:
         output["result"][0]["test_split"][f"mAP@{threshold:.02f}"] = np.mean(
             list(average_precision[threshold].values())

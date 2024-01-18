@@ -83,16 +83,14 @@ if __name__ == "__main__":
         transform_device_rgb = gt_provider.get_aria_transform_device_camera(stream_id)
         print("transform_device_rgb: ", transform_device_rgb)
         timestamp_ns_rgb = gt_provider.get_aria_device_capture_timestamps_ns(stream_id)
-        print("time range: [{}, {}]".format(timestamp_ns_rgb[0], timestamp_ns_rgb[-1]))
-        eg_timestamp_ns_rgb = timestamp_ns_rgb[int(len(timestamp_ns_rgb) / 2)]
+        print(f"time range: [{timestamp_ns_rgb[0]}, {timestamp_ns_rgb[-1]}]")
+        eg_timestamp_ns_rgb = timestamp_ns_rgb[len(timestamp_ns_rgb) // 2]
         tc_ts = gt_provider.get_timecode_from_device_time_ns(eg_timestamp_ns_rgb)
-        print("{} mapped to time code time {}".format(eg_timestamp_ns_rgb, tc_ts))
+        print(f"{eg_timestamp_ns_rgb} mapped to time code time {tc_ts}")
         # TODO test other functions in image provider
         # test time range
         print(
-            "GT time range [{}, {}]".format(
-                gt_provider.get_start_time_ns(), gt_provider.get_end_time_ns()
-            )
+            f"GT time range [{gt_provider.get_start_time_ns()}, {gt_provider.get_end_time_ns()}]"
         )
 
         # test has functions
@@ -171,15 +169,13 @@ if __name__ == "__main__":
         print("aria image valid: ", aria_image_with_dt.is_valid())
         print("aria image dt: ", aria_image_with_dt.dt_ns())
         a_img = aria_image_with_dt.data()
-        print("aria image dim: [{}, {}]".format(a_img.get_width(), a_img.get_height()))
+        print(f"aria image dim: [{a_img.get_width()}, {a_img.get_height()}]")
         print(
-            "aria image value:[{}, {}, {}]".format(
-                a_img.at(938, 938, 0), a_img.at(938, 938, 1), a_img.at(938, 938, 2)
-            )
+            f"aria image value:[{a_img.at(938, 938, 0)}, {a_img.at(938, 938, 1)}, {a_img.at(938, 938, 2)}]"
         )
         a_img_np = a_img.to_numpy_array()
-        print("aria image numpy shape: {}".format(a_img_np.shape))
-        print("aria image numpy value: {}".format(a_img_np[938, 938]))
+        print(f"aria image numpy shape: {a_img_np.shape}")
+        print(f"aria image numpy value: {a_img_np[938, 938]}")
 
         # Aria 3d pose
         aria_3d_pose_with_dt = gt_provider.get_aria_3d_pose_by_timestamp_ns(
@@ -236,12 +232,12 @@ if __name__ == "__main__":
         seg = seg_with_dt.data()
         print("Segmentation valid: ", seg_with_dt.is_valid())
         print("Segmentation dt: ", seg_with_dt.dt_ns())
-        print("Segmentation dim: [{}, {}]".format(seg.get_width(), seg.get_height()))
-        print("Segmentation vis value:{}".format(seg.get_visualizable().at(938, 938)))
-        print("Segmentation value: {}".format(seg.at(938, 938)))
+        print(f"Segmentation dim: [{seg.get_width()}, {seg.get_height()}]")
+        print(f"Segmentation vis value:{seg.get_visualizable().at(938, 938)}")
+        print(f"Segmentation value: {seg.at(938, 938)}")
         seg_np = seg.to_numpy_array()
-        print("Segmentation numpy shape: {}".format(seg_np.shape))
-        print("Segmentation numpy value: {}".format(seg_np[938, 938]))
+        print(f"Segmentation numpy shape: {seg_np.shape}")
+        print(f"Segmentation numpy value: {seg_np[938, 938]}")
 
         # Object depth
         dep_with_dt = gt_provider.get_depth_image_by_timestamp_ns(
@@ -250,13 +246,13 @@ if __name__ == "__main__":
         dep = dep_with_dt.data()
         print("Depth map valid: ", dep_with_dt.is_valid())
         print("Depth map dt: ", dep_with_dt.dt_ns())
-        print("Depth map dim: [{}, {}]".format(dep.get_width(), dep.get_height()))
-        print("Depth map vis value:{}".format(dep.get_visualizable().at(938, 938)))
-        print("Depth map value: {}".format(dep.at(938, 938)))
+        print(f"Depth map dim: [{dep.get_width()}, {dep.get_height()}]")
+        print(f"Depth map vis value:{dep.get_visualizable().at(938, 938)}")
+        print(f"Depth map value: {dep.at(938, 938)}")
         dep_np = dep.to_numpy_array()
-        print("Depth map numpy shape: {}".format(dep_np.shape))
-        print("Depth map numpy dtype: {}".format(dep_np.dtype))
-        print("Depth map numpy value: {}".format(dep_np[938, 938]))
+        print(f"Depth map numpy shape: {dep_np.shape}")
+        print(f"Depth map numpy dtype: {dep_np.dtype}")
+        print(f"Depth map numpy value: {dep_np[938, 938]}")
 
         # Object synthetic
         syn_with_dt = gt_provider.get_synthetic_image_by_timestamp_ns(
@@ -265,7 +261,7 @@ if __name__ == "__main__":
         syn = syn_with_dt.data()
         print("Synthetic valid: ", syn_with_dt.is_valid())
         print("Synthetic dt: ", syn_with_dt.dt_ns())
-        print("Synthetic dim: [{}, {}]".format(syn.get_width(), syn.get_height()))
+        print(f"Synthetic dim: [{syn.get_width()}, {syn.get_height()}]")
         syn_with_dt = gt_provider.get_synthetic_image_by_timestamp_ns(
             eg_timestamp_ns_rgb, stream_id, TimeQueryOptions.BEFORE
         )

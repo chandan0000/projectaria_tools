@@ -48,7 +48,7 @@ def plot_box_wireframe(box):
         lines_z.append(None)
 
     class_name = box["class"]
-    wireframe = go.Scatter3d(
+    return go.Scatter3d(
         x=lines_x,
         y=lines_y,
         z=lines_z,
@@ -59,7 +59,6 @@ def plot_box_wireframe(box):
             "width": 10,
         },
     )
-    return wireframe
 
 
 def plot_point_cloud(points, max_points_to_plot=500_000):
@@ -118,9 +117,7 @@ def plot_3d_scene(language_path=None, points_path=None, trajectory_path=None):
     if language_path is not None:
         entities = read_language_file(language_path)
         boxes = language_to_bboxes(entities)
-        for box in boxes:
-            traces.append(plot_box_wireframe(box))
-
+        traces.extend(plot_box_wireframe(box) for box in boxes)
     assert traces, "Nothing to visualize."
     fig = go.Figure(data=traces)
     fig.update_layout(

@@ -43,10 +43,10 @@ def main():
         metadata = json.load(fp)
 
     with zipfile.ZipFile(
-        args.submission_zip, mode="w", compression=zipfile.ZIP_BZIP2
-    ) as archive:
+            args.submission_zip, mode="w", compression=zipfile.ZIP_BZIP2
+        ) as archive:
         for seq in metadata["challenge"][args.phase]:
-            seq_file = seq + ".csv"
+            seq_file = f"{seq}.csv"
             archive.write(
                 os.path.join(args.submission_folder, seq_file), arcname=seq_file
             )

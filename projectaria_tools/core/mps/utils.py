@@ -33,9 +33,10 @@ def bisection_timestamp_search(timed_data, query_timestamp_ns: int) -> int:
     if timed_data and len(timed_data) > 1:
         first_timestamp = timed_data[0].tracking_timestamp.total_seconds() * 1e9
         last_timestamp = timed_data[-1].tracking_timestamp.total_seconds() * 1e9
-        if query_timestamp_ns <= first_timestamp:
-            return None
-        elif query_timestamp_ns >= last_timestamp:
+        if (
+            query_timestamp_ns <= first_timestamp
+            or query_timestamp_ns >= last_timestamp
+        ):
             return None
     # If this is safe we perform the Bisection search
     start = 0
@@ -58,9 +59,7 @@ def get_nearest_eye_gaze(eye_gazes: List[EyeGaze], query_timestamp_ns: int) -> E
     Return the closest or equal timestamp eye_gaze information that can be found, returns None if not found (out of time range)
     """
     bisection_index = bisection_timestamp_search(eye_gazes, query_timestamp_ns)
-    if bisection_index is None:
-        return None
-    return eye_gazes[bisection_index]
+    return None if bisection_index is None else eye_gazes[bisection_index]
 
 
 def get_nearest_pose(
@@ -71,9 +70,7 @@ def get_nearest_pose(
     Return the closest or equal timestamp pose information that can be found, returns None if not found (out of time range)
     """
     bisection_index = bisection_timestamp_search(mps_trajectory, query_timestamp_ns)
-    if bisection_index is None:
-        return None
-    return mps_trajectory[bisection_index]
+    return None if bisection_index is None else mps_trajectory[bisection_index]
 
 
 def filter_points_from_confidence(
@@ -126,5 +123,4 @@ def get_gaze_vector_reprojection(
     )
     transform_cpf_sensor = device_calibration.get_transform_cpf_sensor(stream_id_label)
     gaze_center_in_camera = transform_cpf_sensor.inverse() @ gaze_center_in_cpf
-    gaze_center_in_pixels = camera_calibration.project(gaze_center_in_camera)
-    return gaze_center_in_pixels
+    return camera_calibration.project(gaze_center_in_camera)

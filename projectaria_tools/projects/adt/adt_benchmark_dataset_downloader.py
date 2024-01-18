@@ -132,20 +132,20 @@ def parse_args():
 def main():
     args = parse_args()
 
-    data_types = []
-    for dt_str in args.data_types:
-        data_types.append(AriaDigitalTwinDataType(int(dt_str)))
+    data_types = [
+        AriaDigitalTwinDataType(int(dt_str)) for dt_str in args.data_types
+    ]
     if not args.metadata_only and not data_types:
         print("-d(, --data_types) must be specified for sequence or example")
         exit(1)
 
     # add slam summary if any slam data is requested
     for data_type in data_types:
-        if (
-            data_type == AriaDigitalTwinDataType.MPS_SLAM_CALIBRATION
-            or data_type == AriaDigitalTwinDataType.MPS_SLAM_TRAJECTORIES
-            or data_type == AriaDigitalTwinDataType.MPS_SLAM_POINTS
-        ):
+        if data_type in [
+            AriaDigitalTwinDataType.MPS_SLAM_CALIBRATION,
+            AriaDigitalTwinDataType.MPS_SLAM_TRAJECTORIES,
+            AriaDigitalTwinDataType.MPS_SLAM_POINTS,
+        ]:
             data_types.append(
                 AriaDigitalTwinDataType(AriaDigitalTwinDataType.MPS_SLAM_SUMMARY)
             )

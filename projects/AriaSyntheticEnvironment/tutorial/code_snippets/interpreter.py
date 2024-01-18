@@ -34,8 +34,7 @@ def z_rotation(angle):
     """
     s = np.sin(angle)
     c = np.cos(angle)
-    rot_matrix = np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
-    return rot_matrix
+    return np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
 
 
 def _compute_counts(boxes):
